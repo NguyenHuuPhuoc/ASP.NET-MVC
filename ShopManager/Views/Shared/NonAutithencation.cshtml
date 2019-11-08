@@ -1,0 +1,98 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DLCHT | Không có quyền sử dụng</title>
+    <!-- Bootstrap -->
+    <link href="/Content/plugins/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/plugins/css/toastr.min.css" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+    <!-- NProgress -->
+    <link href="/Content/plugins/css/nprogress.css" rel="stylesheet" />
+    <!-- Custom Theme Style -->
+    <link href="/Content/plugins/css/custom.min.css" rel="stylesheet" />
+</head>
+<body class="nav-md">
+    <div class="container body">
+        <div class="main_container">
+            <!-- page content -->
+            <div class="col-md-12">
+                <div class="col-middle">
+                    <div class="text-center text-center">
+                        <h1 class="error-number">401</h1>
+                        <h2>Bạn không có quyền thực thực hiện tác vụ này, liên hệ quản trị để biết thêm thông tin.</h2>
+                    </div>
+                </div>
+            </div>
+            <!-- /page content -->
+        </div>
+    </div>
+    <script src="/Content/plugins/js/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="/Content/plugins/js/bootstrap.min.js"></script>
+    <script src="/Content/plugins/js/toastr.min.js"></script>
+    <!-- FastClick -->
+    <script src="/Content/plugins/js/fastclick.js"></script>
+    <!-- NProgress -->
+    <script src="/Content/plugins/js/nprogress.js"></script>
+    <!-- jQuery custom content scroller -->
+    <script src="/Content/plugins/js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <!-- Custom Theme Scripts -->
+    <script src="/Content/plugins/js/custom.min.js"></script>
+    <script src="/Content/plugins/jsCustom/toastrServiceSetting.js"></script>
+
+    @if (TempData["toastrType"] != null && TempData["toastrMessage"] != null)
+    {
+        <script>
+            var type = '@TempData["toastrType"]';
+            var message = '@TempData["toastrMessage"]';
+            if (type === 'success') {
+                toastr.success(message);
+                $.ajax({
+                    url: "/Admin/Base/ClearAlert",
+                    type: "post",
+                    dataType: "json"
+                });
+            }
+
+            if (type === 'info') {
+                toastr.info(message);
+                $.ajax({
+                    url: "/Admin/Base/ClearAlert",
+                    type: "post",
+                    dataType: "json"
+                });
+            }
+
+            if (type === 'warning') {
+                toastr.warning(message);
+                $.ajax({
+                    url: "/Admin/Base/ClearAlert",
+                    type: "post",
+                    dataType: "json"
+                });
+            }
+
+            if (type === 'error') {
+                toastr.error(message);
+                $.ajax({
+                    url: "/Admin/Base/ClearAlert",
+                    type: "post",
+                    dataType: "json"
+                });
+            }
+        </script>
+    }
+</body>
+</html>
+

@@ -1,0 +1,180 @@
+﻿
+@{
+    ViewBag.Title = "Kiểu dáng";
+    var lstParentCategory = ViewData["ParentCategories"] as IEnumerable<Category>;
+}
+@using ShopManager.Models
+@using DOMAIN.Models
+@using MvcPaging
+@model DesignViewModel
+
+@section JsFooter{   
+    <script src="/Content/plugins/jsCustom/designController.js"></script>
+}
+
+<div class="right_col" role="main">
+    <div class="row">
+        <div class="col-md-9">
+            <form class="form-horizontal form-label-left" action="/Design/Index" method="post" id="frmFilter">
+                <div class="form-group">
+                    <div class="col-sm-6">
+                        <div class="input-group">
+                            @Html.TextBox("KeyWord", Model.KeyWord, new { @class = "form-control", @placeholder = "Từ tìm kiếm" })
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        @Html.DropDownList("ParentCategoryId", new SelectList(lstParentCategory, "Id", "Name", Model.ParentCategoryId), "-- Lựa chọn danh mục--", new { @class = "form-control" })
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-3">
+            <button class="btn btn-primary pull-right" id="btnCreateNew"><i class="fa fa-plus-square">  Thêm mới</i></button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Danh sách các kiểu dáng</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li>
+                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <div class="table-responsive">
+                        <table class="table table-striped jambo_table bulk_action">
+                            <thead>
+                                <tr class="headings">
+                                    <th class="column-title" style="width: 5%; text-align: center;">STT </th>
+                                    <th class="column-title" style="width: 20%; text-align: center;">Tên </th>
+                                    <th class="column-title" style="width: 15%; text-align: center;">Ngày tạo </th>
+                                    <th class="column-title" style="width: 15%; text-align: center;">Sửa lần cuối </th>
+                                    <th class="column-title" style="width: 15%; text-align: center;">Trạng thái </th>
+                                    <th class="column-title" style="width: 30%; text-align: center;"># </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    var lst = Model.Designs.ToList();
+                                    var i = Model.Designs.PageIndex * Model.Designs.PageSize;
+                                }
+                                @foreach (var item in lst)
+                                {
+                                    using (Html.BeginForm("Delete", "Design", FormMethod.Post, new { @id = "frm_" + item.Id }))
+                                    {
+                                        @Html.Hidden("id", item.Id)
+                                        @Html.AntiForgeryToken()
+                                        <tr class="even pointer">
+                                            <td style="width: 5%; text-align: center;">@(++i)</td>
+                                            <td style="width: 20%; text-align: center;">@item.Name</td>
+                                            <td style="width: 15%; text-align: center;">@item.CreateDate.Value.ToString("dd/MM/yyyy")</td>
+                                            @if (item.UpdateDate.HasValue)
+                                            {
+                                                <td style="width: 15%; text-align: center;">@item.UpdateDate.Value.ToString("dd/MM/yyyy")</td>
+                                            }
+                                            else
+                                            {
+                                                <td style="width: 15%; text-align: center;"></td>
+                                            }
+                                            <td style="width: 15%; text-align: center;">@(item.Status ? "Kích hoạt" : "Tạm khóa")</td>
+                                            <td style="width: 30%; text-align: center;">
+                                                <button class="viewDetail btn btn-round btn-default" title="Xem chi tiết" data-id="@item.Id"><i class="fa fa-info"></i></button>
+                                                <button class="editUnit btn btn-round btn-default" title="Sửa thông tin" data-id="@item.Id"><i class="fa fa-pencil-square"></i></button>
+                                                <button class="deleteUnit btn btn-round btn-default" title="Xóa" data-id="@item.Id" type="button"><i class="fa fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="paging col-lg-offset-4 col-lg-8 col-md-offset-4 col-md-8 col-sm-offset-4 col-sm-8 col-xs-12 pull-right">
+                        @Html.Pager(Model.Designs.PageSize, Model.Designs.PageNumber, Model.Designs.TotalItemCount).Options(n => n.AddRouteValueFor(m => m.KeyWord).AddRouteValueFor(m => m.ParentCategoryId).DisplayFirstAndLastPage().SetFirstPageText("<< Đầu").SetLastPageText("Cuối >>").SetNextPageText("Sau >").SetPreviousPageText("< Trước"))
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal modal-default" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" id="modalConfirmDelete">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <label style="color: red;">CẢNH BÁO</label>
+            </div>
+            <div class="modal-body form-horizontal">
+                <p>Xóa dữ liệu này có thể xóa đi các dữ liệu có liên quan.</p>
+                <p>Bạn chắc chắn muốn xóa?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" id="btnOkDelete">Xóa</button>
+                <button data-dismiss="modal" class="pull-right btn btn-default" onclick="$('#modalConfirmDelete').hide();"><i class="fa fa-close"></i>Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal modal-default" id="modalViewDetail">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4><i class="fa fa-eye"></i> Thông tin chi tiết</h4>
+            </div>
+            <div class="modal-body form-horizontal">
+                <div class="form-group">
+                    <div class="col-sm-3">Tên:</div>
+                    <p class="col-sm-7 lblName"></p>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">Danh mục cha:</div>
+                    <p class="col-sm-7 lblParentCategory"></p>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">Người tạo:</div>
+                    <p class="col-sm-7 lblCreateBy"></p>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-3">Ngày Tạo:</div>
+                    <p class="col-sm-7 lblCreateDate"></p>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-3"> Người sửa lần cuối:</div>
+                    <p class="col-sm-7 lblUpdateBy"></p>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-3">Lần Cuối Chỉnh Sửa:</div>
+                    <p class="col-sm-7 lblUpdateDate"></p>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-3">Mô tả chung:</div>
+                    <p class="col-sm-7 lblDescreption"></p>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-3">Trạng Thái:</div>
+                    <p class="col-sm-7 lblStatus"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#" data-dismiss="modal" class="pull-right btn btn-danger"><i class="fa fa-close"></i>Đóng</a>
+            </div>
+        </div>
+    </div>
+</div>
+

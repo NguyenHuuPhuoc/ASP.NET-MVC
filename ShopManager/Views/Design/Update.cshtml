@@ -1,0 +1,76 @@
+﻿
+@{
+    ViewBag.Title = "Cập nhật kiểu dáng";
+    var lstParentCategory = ViewData["ParentCategories"] as IEnumerable<Category>;
+}
+@using DOMAIN.Models
+@model Design
+@section JsFooter{
+
+}
+
+<div class="right_col" role="main">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Cập nhật <small>kiểu dáng</small></h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li>
+                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <br />
+                    <form data-parsley-validate class="form-horizontal form-label-left" action="/Design/Update" method="post">
+                        @Html.AntiForgeryToken()
+                        @Html.Hidden("Id", Model.Id)
+                        @Html.Hidden("CreateBy", Model.CreateBy)
+                        @Html.Hidden("CreateDate", Model.CreateDate)
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">
+                                Loại danh mục <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.DropDownList("ParentCategoryId", new SelectList(lstParentCategory, "Id", "Name", Model.ParentCategoryId), "--Chọn danh mục cha--", new { @class = "form-control col-md-7 col-xs-12" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">
+                                Tên <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.TextBox("Name", Model.Name, new { @required = "required", @class = "form-control col-md-7 col-xs-12", maxlength = "128" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">
+                                Mô tả chung <span class="required"></span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.TextArea("Descreption", Model.Descreption, new { @class = "form-control col-md-7 col-xs-12", maxlength = "256" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">
+                                Trạng thái <span class="required"></span>
+                            </label>
+                            <div class="col-md-1 col-sm-11 col-xs-12">
+                                @Html.CheckBox("Status", Model.Status, new { @class = "form-control col-md-7 col-xs-12" })
+                            </div>
+                        </div>
+                        <div class="ln_solid"></div>
+                        <div class="form-group">
+                            <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                                <button type="button" class="btn btn-primary" id="btnCancel" onclick="location.href = '/Design';">Hủy</button>
+                                <button type="submit" class="btn btn-success">Lưu</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,70 @@
+﻿
+@{
+    Layout = null;
+}
+@using ShopManager.Models
+@model LoginViewModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DLCHT | Đăng nhập quản trị</title>
+    <!-- Bootstrap -->
+    <link href="/Content/plugins/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/plugins/css/toastr.min.css" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+    <!-- NProgress -->
+    <link href="/Content/plugins/css/nprogress.css" rel="stylesheet" />
+    <!-- Animate.css -->
+    <link href="/Content/plugins/css/animate.min.css" rel="stylesheet" />
+    <!-- Custom Theme Style -->
+    <link href="/Content/plugins/css/custom.min.css" rel="stylesheet" />
+    <link href="/Content/plugins/css/LoginCustom.css" rel="stylesheet" />
+</head>
+<body class="login">
+    <div>
+        <a class="hiddenanchor" id="signup"></a>
+        <a class="hiddenanchor" id="signin"></a>
+        <div class="login_wrapper">
+            <div class="animate form login_form">
+                <section class="login_content">
+                    <form action="/Account/Login" method="post">
+                        @Html.AntiForgeryToken()
+                        <h1>   Quản Trị Viên </h1>
+                        <div>
+                            <input type="text" class="form-control" placeholder="Tên đăng nhập" value="@Model.UserName" name="UserName" required />
+                        </div>
+                        <div>
+                            <input type="password" class="form-control" placeholder="Mật khẩu" value="@Model.Password" name="Password" required />
+                        </div>
+                        <div>
+                            <button class="btn btn-default" type="submit" href="#" id="btnLogin">Đăng nhập</button>
+                            <a class="reset_pass" href="#">Quên Mật Khẩu?</a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </form>
+                </section>
+            </div>
+        </div>
+    </div>
+    <!-- jQuery -->
+    <script src="/Content/plugins/js/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="/Content/plugins/js/bootstrap.min.js"></script>
+    <script src="/Content/plugins/js/nprogress.js"></script>
+    <script src="/Content/plugins/js/toastr.min.js"></script>
+    <script src="/Content/plugins/jsCustom/toastrServiceSetting.js"></script>
+    @if (ViewData["ErrorLogin"] != null)
+    {
+        <script>
+                toastr.error('@ViewData["ErrorLogin"]');
+        </script>
+    }
+</body>
+</html>
+
